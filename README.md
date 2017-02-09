@@ -10,3 +10,8 @@ Docket example :
 http://containertutorials.com/docker-compose/spring-boot-app.html
 
 https://blog.giantswarm.io/getting-started-with-java-development-on-docker/
+
+
+-----------------------------------------------
+
+# Download project and import as maven project
