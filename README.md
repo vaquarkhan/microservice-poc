@@ -33,3 +33,7 @@ http://cloudacademy.com/blog/microservices-architecture-challenge-advantage-draw
 http://highscalability.com/blog/2014/4/8/microservices-not-a-free-lunch.html
 
 
+# Spring cloud kubernetes
+
+https://github.com/fabric8io/spring-cloud-kubernetes
+
