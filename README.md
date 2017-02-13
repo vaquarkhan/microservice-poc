@@ -19,8 +19,12 @@ https://blog.giantswarm.io/getting-started-with-java-development-on-docker/
 
 # Microservice advantage and drawback:
 
-https://developers.redhat.com/blog/wp-content/uploads/2016/12/screen-shot-2016-12-06-at-10-37-37-768x689.png
 
+
+
+![alt tag](https://developers.redhat.com/blog/wp-content/uploads/2016/12/screen-shot-2016-12-06-at-10-37-37-768x689.png)
+
+![alt tag](https://4.bp.blogspot.com/-5Ey_qCiot5I/WD6Rt-aQ80I/AAAAAAAAG1w/KN53HAAcntoJhffG3HBCZGJWvgVq_umYQCLcB/s640/Screen%2BShot%2B2016-11-30%2Bat%2B08.45.11.png)
 
 https://martinfowler.com/articles/microservice-trade-offs.html
 
