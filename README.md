@@ -1,11 +1,11 @@
-# microservice-poc
-#vaquar khan 
-#This is demo poc for micro service architecture
-#Spring cloud sample
+# Microservice-poc
+vaquar khan 
+
+###  Spring cloud netflix sample
 
 https://github.com/spring-cloud-samples
 
-Docket example :
+### Docket example :
 
 http://containertutorials.com/docker-compose/spring-boot-app.html
 
@@ -17,7 +17,7 @@ https://blog.giantswarm.io/getting-started-with-java-development-on-docker/
  Download project and import as maven project
 
 
-# Microservice advantage and drawback:
+### Microservice advantage and drawback:
 
 
 
@@ -33,7 +33,7 @@ http://cloudacademy.com/blog/microservices-architecture-challenge-advantage-draw
 http://highscalability.com/blog/2014/4/8/microservices-not-a-free-lunch.html
 
 
-# Spring cloud kubernetes
+### Spring cloud kubernetes
 
 https://github.com/fabric8io/spring-cloud-kubernetes
 
