@@ -46,8 +46,8 @@ class Order {
 
     public double totalPrice(CatalogClient itemClient) {
         return orderLine.stream()
-                .map((ol) -> ol.getCount() * itemClient.price(ol.getItemId()))
-                .reduce(0.0, (d1, d2) -> d1 + d2);
+                .map(ol -> ol.getCount() * itemClient.price(ol.getItemId()))
+                .reduce(0.0, Double::sum);
     }
 
     public void setCustomer(long customerId) {
