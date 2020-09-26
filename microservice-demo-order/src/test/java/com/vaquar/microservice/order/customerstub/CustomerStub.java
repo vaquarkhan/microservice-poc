@@ -1,7 +1,6 @@
 package com.vaquar.microservice.order.customerstub;
 
-import java.util.Arrays;
-
+import com.vaquar.microservice.order.clients.Customer;
 import org.springframework.context.annotation.Profile;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.PagedResources.PageMetadata;
@@ -12,29 +11,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vaquar.microservice.order.clients.Customer;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/customer")
 @Profile("test")
 public class CustomerStub {
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Customer> getById(@PathVariable("id") long id) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Customer> getById(@PathVariable("id") long id) {
 
-		if (id != 42) {
-			return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<Customer>(new Customer(42, "Eberhard",
-				"Wolff", "eberhard.wolff@gmail.com", "Unter den Linden",
-				"Berlin"), HttpStatus.OK);
-	}
+        if (id != 42) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new Customer(42, "Eberhard",
+                "Wolff", "eberhard.wolff@gmail.com", "Unter den Linden",
+                "Berlin"), HttpStatus.OK);
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public PagedResources<Customer> getAll() {
-		return new PagedResources<Customer>(Arrays.asList(new Customer(42,
-				"Eberhard", "Wolff", "eberhard.wolff@gmail.com",
-				"Unter den Linden", "Berlin")), new PageMetadata(1, 0, 1));
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public PagedResources<Customer> getAll() {
+        return new PagedResources<>(Collections.singletonList(new Customer(42,
+                "Eberhard", "Wolff", "eberhard.wolff@gmail.com",
+                "Unter den Linden", "Berlin")), new PageMetadata(1, 0, 1));
+    }
 
 }

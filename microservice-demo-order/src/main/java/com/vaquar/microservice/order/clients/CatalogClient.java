@@ -86,6 +86,10 @@ public class CatalogClient {
         return pagedResources.getContent();
     }
 
+    private Collection<Item> getItemsCache() {
+        return itemsCache;
+    }
+
     private String catalogURL() {
         String url;
         if (useRibbon) {
