@@ -1,0 +1,61 @@
+version: '3.3'
+services:
+  eureka:
+    image: eureka-server
+    build: ./microservice-demo-eureka-server
+    ports:
+      - '8761:8761'
+
+  catalog-service:
+    image: catalog-service
+    build: ./microservice-demo-catalog
+    ports:
+      - '8085:8085'
+    depends_on:
+      - eureka
+    restart: on-failure
+
+  customer-service:
+    image: customer-service
+    build: ./microservice-demo-customer
+    ports:
+      - '8086:8086'
+    depends_on:
+      - eureka
+      - catalog-service
+    restart: on-failure
+
+  order-service:
+    image: order-service
+    build: ./microservice-demo-order
+    ports:
+      - '8087:8087'
+    depends_on:
+      - eureka
+      - catalog-service
+      - customer-service
+    restart: on-failure
+
+  turbine-service:
+    image: turbine-service
+    build: ./microservice-demo-turbine-server
+    ports:
+      - '8989:8989'
+    depends_on:
+      - eureka
+      - catalog-service
+      - customer-service
+      - order-service
+    restart: on-failure
+
+  gateway-service:
+    image: gateway-service
+    build: ./microservice-demo-zuul-server
+    ports:
+      - '8765:8765'
+    depends_on:
+      - eureka
+      - catalog-service
+      - customer-service
+      - order-service
+    restart: on-failure
