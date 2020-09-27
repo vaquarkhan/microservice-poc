@@ -1,84 +1,70 @@
 package com.vaquar.microservice.order.logic;
 
-import java.util.Collection;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.vaquar.microservice.order.clients.CatalogClient;
 import com.vaquar.microservice.order.clients.Customer;
 import com.vaquar.microservice.order.clients.CustomerClient;
 import com.vaquar.microservice.order.clients.Item;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+import java.util.Collection;
+
+@RequiredArgsConstructor
+@RestController
 class OrderController {
 
-	private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final OrderService orderService;
+    private final CustomerClient customerClient;
+    private final CatalogClient catalogClient;
 
-	private OrderService orderService;
+    // Constants
+	private static final String SUCCESS = "success";
+	private static final String ORDER = "order";
 
-	private CustomerClient customerClient;
-	private CatalogClient catalogClient;
+    @ModelAttribute("items")
+    public Collection<Item> items() {
+        return catalogClient.findAll();
+    }
 
-	@Autowired
-	private OrderController(OrderService orderService,
-			OrderRepository orderRepository, CustomerClient customerClient,
-			CatalogClient catalogClient) {
-		super();
-		this.orderRepository = orderRepository;
-		this.customerClient = customerClient;
-		this.catalogClient = catalogClient;
-		this.orderService = orderService;
-	}
+    @ModelAttribute("customers")
+    public Collection<Customer> customers() {
+        return customerClient.findAll();
+    }
 
-	@ModelAttribute("items")
-	public Collection<Item> items() {
-		return catalogClient.findAll();
-	}
+    @RequestMapping("/")
+    public ModelAndView orderList() {
+        return new ModelAndView("orderlist", "orders",
+                orderRepository.findAll());
+    }
 
-	@ModelAttribute("customers")
-	public Collection<Customer> customers() {
-		return customerClient.findAll();
-	}
+    @GetMapping(value = "/form")
+    public ModelAndView form() {
+        return new ModelAndView("orderForm", ORDER, new Order());
+    }
 
-	@RequestMapping("/")
-	public ModelAndView orderList() {
-		return new ModelAndView("orderlist", "orders",
-				orderRepository.findAll());
-	}
+    @PostMapping(value = "/line")
+    public ModelAndView addLine(Order order) {
+        order.addLine(0, catalogClient.findAll().iterator().next().getItemId());
+        return new ModelAndView("orderForm", ORDER, order);
+    }
 
-	@RequestMapping(value = "/form", method = RequestMethod.GET)
-	public ModelAndView form() {
-		return new ModelAndView("orderForm", "order", new Order());
-	}
+    @GetMapping(value = "/{id}")
+    public ModelAndView get(@PathVariable("id") long id) {
+        return new ModelAndView(ORDER, ORDER, orderRepository.findOne(id));
+    }
 
-	@RequestMapping(value = "/line", method = RequestMethod.POST)
-	public ModelAndView addLine(Order order) {
-		order.addLine(0, catalogClient.findAll().iterator().next().getItemId());
-		return new ModelAndView("orderForm", "order", order);
-	}
+    @PostMapping(value = "/")
+    public ModelAndView post(Order order) {
+        orderService.order(order);
+        return new ModelAndView(SUCCESS);
+    }
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ModelAndView get(@PathVariable("id") long id) {
-		return new ModelAndView("order", "order", orderRepository.findOne(id));
-	}
-
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ModelAndView post(Order order) {
-		order = orderService.order(order);
-		return new ModelAndView("success");
-	}
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ModelAndView post(@PathVariable("id") long id) {
-		orderRepository.delete(id);
-
-		return new ModelAndView("success");
-	}
+    @DeleteMapping(value = "/{id}")
+    public ModelAndView post(@PathVariable("id") long id) {
+        orderRepository.delete(id);
+        return new ModelAndView(SUCCESS);
+    }
 
 }

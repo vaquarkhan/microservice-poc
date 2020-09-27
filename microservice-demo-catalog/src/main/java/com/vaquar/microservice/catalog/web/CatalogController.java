@@ -1,70 +1,66 @@
 package com.vaquar.microservice.catalog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.vaquar.microservice.catalog.Item;
 import com.vaquar.microservice.catalog.ItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@RestController
 public class CatalogController {
 
-	private final ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
+    private static final String SUCCESS = "success";
 
-	@Autowired
-	public CatalogController(ItemRepository itemRepository) {
-		this.itemRepository = itemRepository;
-	}
+    @Autowired
+    public CatalogController(ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
+    }
 
-	@RequestMapping(value = "/{id}.html", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-	public ModelAndView Item(@PathVariable("id") long id) {
-		return new ModelAndView("item", "item", itemRepository.findOne(id));
-	}
+    @GetMapping(value = "/{id}.html", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView Item(@PathVariable("id") long id) {
+        return new ModelAndView("item", "item", itemRepository.findOne(id));
+    }
 
-	@RequestMapping("/list.html")
-	public ModelAndView ItemList() {
-		return new ModelAndView("itemlist", "items", itemRepository.findAll());
-	}
+    @GetMapping("/list.html")
+    public ModelAndView ItemList() {
+        return new ModelAndView("itemlist", "items", itemRepository.findAll());
+    }
 
-	@RequestMapping(value = "/form.html", method = RequestMethod.GET)
-	public ModelAndView add() {
-		return new ModelAndView("item", "item", new Item());
-	}
+    @GetMapping(value = "/form.html")
+    public ModelAndView add() {
+        return new ModelAndView("item", "item", new Item());
+    }
 
-	@RequestMapping(value = "/form.html", method = RequestMethod.POST)
-	public ModelAndView post(Item Item) {
-		Item = itemRepository.save(Item);
-		return new ModelAndView("success");
-	}
+    @PostMapping(value = "/form.html")
+    public ModelAndView post(Item item) {
+        itemRepository.save(item);
+        return new ModelAndView(SUCCESS);
+    }
 
-	@RequestMapping(value = "/{id}.html", method = RequestMethod.PUT)
-	public ModelAndView put(@PathVariable("id") long id, Item item) {
-		item.setId(id);
-		itemRepository.save(item);
-		return new ModelAndView("success");
-	}
+    @PutMapping(value = "/{id}.html")
+    public ModelAndView put(@PathVariable("id") long id, Item item) {
+        item.setId(id);
+        itemRepository.save(item);
+        return new ModelAndView(SUCCESS);
+    }
 
-	@RequestMapping(value = "/searchForm.html", produces = MediaType.TEXT_HTML_VALUE)
-	public ModelAndView searchForm() {
-		return new ModelAndView("searchForm");
-	}
+    @GetMapping(value = "/searchForm.html", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView searchForm() {
+        return new ModelAndView("searchForm");
+    }
 
-	@RequestMapping(value = "/searchByName.html", produces = MediaType.TEXT_HTML_VALUE)
-	public ModelAndView search(@RequestParam("query") String query) {
-		return new ModelAndView("itemlist", "items",
-				itemRepository.findByNameContaining(query));
-	}
+    @GetMapping(value = "/searchByName.html", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView search(@RequestParam("query") String query) {
+        return new ModelAndView("itemlist", "items",
+                itemRepository.findByNameContaining(query));
+    }
 
-	@RequestMapping(value = "/{id}.html", method = RequestMethod.DELETE)
-	public ModelAndView delete(@PathVariable("id") long id) {
-		itemRepository.delete(id);
-		return new ModelAndView("success");
-	}
+    @DeleteMapping(value = "/{id}.html")
+    public ModelAndView delete(@PathVariable("id") long id) {
+        itemRepository.delete(id);
+        return new ModelAndView(SUCCESS);
+    }
 
 }

@@ -1,63 +1,63 @@
 package com.vaquar.microservice.customer.web;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.vaquar.microservice.customer.Customer;
+import com.vaquar.microservice.customer.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.vaquar.microservice.customer.Customer;
-import com.vaquar.microservice.customer.CustomerRepository;
+import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 public class CustomerController {
 
-	private CustomerRepository customerRepository;
+    public static final String SUCCESS = "success";
+    private CustomerRepository customerRepository;
 
-	@Autowired
-	public CustomerController(CustomerRepository customerRepository) {
-		this.customerRepository = customerRepository;
-	}
+    public static final String CUSTOMER = "customer";
 
-	@RequestMapping(value = "/{id}.html", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-	public ModelAndView customer(@PathVariable("id") long id) {
-		return new ModelAndView("customer", "customer",
-				customerRepository.findOne(id));
-	}
+    @Autowired
+    public CustomerController(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
-	@RequestMapping("/list.html")
-	public ModelAndView customerList() {
-		return new ModelAndView("customerlist", "customers",
-				customerRepository.findAll());
-	}
+    @GetMapping(value = "/{id}.html", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView customerById(@PathVariable("id") long id) {
+        return new ModelAndView(CUSTOMER, CUSTOMER,
+                customerRepository.findOne(id));
+    }
 
-	@RequestMapping(value = "/form.html", method = RequestMethod.GET)
-	public ModelAndView add() {
-		return new ModelAndView("customer", "customer", new Customer());
-	}
+    @GetMapping("/list.html")
+    public ModelAndView customerList() {
+        return new ModelAndView("customerlist", "customers",
+                customerRepository.findAll());
+    }
 
-	@RequestMapping(value = "/form.html", method = RequestMethod.POST)
-	public ModelAndView post(Customer customer, HttpServletRequest httpRequest) {
-		customer = customerRepository.save(customer);
-		return new ModelAndView("success");
-	}
+    @GetMapping(value = "/form.html")
+    public ModelAndView add() {
+        return new ModelAndView(CUSTOMER, CUSTOMER, new Customer());
+    }
 
-	@RequestMapping(value = "/{id}.html", method = RequestMethod.PUT)
-	public ModelAndView put(@PathVariable("id") long id, Customer customer,
-			HttpServletRequest httpRequest) {
-		customer.setId(id);
-		customerRepository.save(customer);
-		return new ModelAndView("success");
-	}
+    @PostMapping(value = "/form.html")
+    public ModelAndView post(Customer customer, HttpServletRequest httpRequest) {
+        customerRepository.save(customer);
+        return new ModelAndView(SUCCESS);
+    }
 
-	@RequestMapping(value = "/{id}.html", method = RequestMethod.DELETE)
-	public ModelAndView delete(@PathVariable("id") long id) {
-		customerRepository.delete(id);
-		return new ModelAndView("success");
-	}
+    @PutMapping(value = "/{id}.html")
+    public ModelAndView put(@PathVariable("id") long id, Customer customer,
+                            HttpServletRequest httpRequest) {
+        customer.setId(id);
+        customerRepository.save(customer);
+        return new ModelAndView(SUCCESS);
+    }
+
+    @DeleteMapping(value = "/{id}.html")
+    public ModelAndView delete(@PathVariable("id") long id) {
+        customerRepository.delete(id);
+        return new ModelAndView(SUCCESS);
+    }
 
 }
